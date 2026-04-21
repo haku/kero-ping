@@ -14,33 +14,31 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import javax.websocket.ClientEndpointConfig;
-import javax.websocket.ClientEndpointConfig.Configurator;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.PongMessage;
-import javax.websocket.SendHandler;
-import javax.websocket.SendResult;
-import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
-
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.dynamic.HttpClientTransportDynamic;
 import org.eclipse.jetty.io.ClientConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.eclipse.jetty.websocket.javax.client.internal.JavaxWebSocketClientContainer;
+import org.eclipse.jetty.websocket.jakarta.client.internal.JakartaWebSocketClientContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import kero_ping.util.Time;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
+import jakarta.websocket.ClientEndpointConfig;
+import jakarta.websocket.ClientEndpointConfig.Configurator;
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.DeploymentException;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.MessageHandler;
+import jakarta.websocket.PongMessage;
+import jakarta.websocket.SendHandler;
+import jakarta.websocket.SendResult;
+import jakarta.websocket.Session;
+import jakarta.websocket.WebSocketContainer;
+import kero_ping.util.Time;
 
 public class WsPing implements Runnable {
 
@@ -112,15 +110,15 @@ public class WsPing implements Runnable {
 	}
 
 	private WebSocketContainer makeClientContainer(final InetAddress clientAddress) {
-		final JavaxWebSocketClientContainer clientContainer;
+		final JakartaWebSocketClientContainer clientContainer;
 		try {
 			final SslContextFactory.Client sslContextFactory = new SslContextFactory.Client();
 			sslContextFactory.setTrustAll(false);
 			sslContextFactory.setSslSessionTimeout(MAX_TIMEOUT_SECONDS);
-			
+
 			ClientConnector clientConnector = new ClientConnector();
 			clientConnector.setSslContextFactory(sslContextFactory);
-			
+
 			final HttpClient httpClient = new HttpClient(new HttpClientTransportDynamic(clientConnector));
 
 			httpClient.setAddressResolutionTimeout(TimeUnit.SECONDS.toMillis(MAX_TIMEOUT_SECONDS));
@@ -133,7 +131,7 @@ public class WsPing implements Runnable {
 
 			httpClient.start();
 
-			clientContainer = new JavaxWebSocketClientContainer(httpClient);
+			clientContainer = new JakartaWebSocketClientContainer(httpClient);
 			clientContainer.start();
 			return clientContainer;
 		}
