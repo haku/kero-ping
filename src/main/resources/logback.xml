@@ -14,7 +14,7 @@
 
 	<logger name="kero_ping" level="INFO" />
 
-	<root level="info">
+	<root level="INFO">
 		<appender-ref ref="default" />
 	</root>
 
